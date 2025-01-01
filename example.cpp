@@ -1,4 +1,5 @@
 #include <iostream>
+#include "raylib.h"
 
 #define HLAM_MATH_IMPLEMENTATION
 #include "math.h"
@@ -19,5 +20,19 @@ int main() {
 
   std::cout << vec_dot(v1, v2) << std::endl;
 
+  InitWindow(400, 240, "Example");
+
+  hlam::Vec2 p{20,10};
+  hlam::Vec2 size{40,60};
+
+  SetTargetFPS(60);
+  while (!WindowShouldClose()) {
+    BeginDrawing();
+    ClearBackground(PINK);
+    DrawRectangleV(p.rl, size.rl, GREEN);
+    EndDrawing();
+  }
+
+  CloseWindow();
   return 0;
 }

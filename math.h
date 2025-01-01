@@ -6,6 +6,9 @@ typedef union Vec2 {
   struct {
     float x, y;
   };
+  #ifdef RAYLIB_H
+  Vector2 rl;
+  #endif // RAYLIB_H
   float e[2];
 } Vec2;
 
@@ -18,17 +21,23 @@ typedef union Vec3 {
   };
   Vec2 xy;
   float e[3];
+  #ifdef RAYLIB_H
+  Vector3 rl;
+  #endif // RAYLIB_H
 } Vec3;
 
 typedef union Rect {
   struct {
-    float x, y, h, w;
+    float x, y, w, h;
   };
   struct {
     Vec2 pos;
     Vec2 size;
   };
   float e[4];
+  #ifdef RAYLIB_H
+  Rectangle rl;
+  #endif // RAYLIB_H
 } Rect;
 
 inline bool operator==(Vec2 a, Vec2 b) { return (a.x == b.x) && (a.y == b.y); }
