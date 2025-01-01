@@ -33,6 +33,17 @@ struct Rect : public ::Rectangle {};
 
 #endif
 
+struct Triangle2 {
+  Vec2 p1;
+  Vec2 p2;
+  Vec2 p3;
+};
+
+struct Circle {
+  Vec2 center;
+  float radius;
+};
+
 inline bool operator==(Vec2 a, Vec2 b) { return (a.x == b.x) && (a.y == b.y); }
 inline bool operator!=(Vec2 a, Vec2 b) { return !operator==(a, b); }
 
@@ -89,6 +100,33 @@ inline Vec3 vec_cross(const Vec3 &v0, const Vec3 &v1) {
       v0.z * v1.x - v0.x * v1.z,
       v0.x * v1.y - v0.y * v1.x,
   };
+}
+
+inline float vec_length(const Vec2 &v) { return sqrtf(v.x * v.x + v.y * v.y); }
+inline float vec_length(const Vec3 &v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
+
+inline Vec2 vec_norm(const Vec2 &v) {
+  Vec2 result{};
+  auto length = vec_length(v);
+
+  if (length > 0) {
+    auto ilength = 1.0f / length;
+    result.x = v.x * ilength;
+    result.y = v.y * ilength;
+  }
+
+  return result;
+}
+
+inline float vec_dist_sqr(const Vec2 &v1, const Vec2 &v2) {
+  return ((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
+}
+
+inline float vec_dist_sqr(const Vec3 &v1, const Vec3 &v2) {
+  auto dx = v2.x - v1.x;
+  auto dy = v2.y - v1.y;
+  auto dz = v2.z - v1.z;
+  return dx * dx + dy * dy + dz * dz;
 }
 
 }  // namespace hlam
