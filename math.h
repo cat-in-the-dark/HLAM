@@ -2,43 +2,36 @@
 #define HLAM_MATH_H
 
 namespace hlam {
-typedef union Vec2 {
-  struct {
-    float x, y;
-  };
-  #ifdef RAYLIB_H
-  Vector2 rl;
-  #endif // RAYLIB_H
-  float e[2];
-} Vec2;
 
-typedef union Vec3 {
-  struct {
-    float x, y, z;
-  };
-  struct {
-    float r, g, b;
-  };
-  Vec2 xy;
-  float e[3];
-  #ifdef RAYLIB_H
-  Vector3 rl;
-  #endif // RAYLIB_H
-} Vec3;
+#ifndef RAYLIB_H
+struct Vec2 {
+  float x;
+  float y;
+};
 
-typedef union Rect {
-  struct {
-    float x, y, w, h;
-  };
-  struct {
-    Vec2 pos;
-    Vec2 size;
-  };
-  float e[4];
-  #ifdef RAYLIB_H
-  Rectangle rl;
-  #endif // RAYLIB_H
-} Rect;
+struct Vec3 {
+  float x;
+  float y;
+  float z;
+};
+
+struct Rect {
+  float x;
+  float y;
+  float width;
+  float height;
+};
+#else
+
+// Don't add anything, just define those here so everything (incl. operators)
+// is contained in our namespace
+struct Vec2 : public ::Vector2 {};
+
+struct Vec3 : public ::Vector3 {};
+
+struct Rect : public ::Rectangle {};
+
+#endif
 
 inline bool operator==(Vec2 a, Vec2 b) { return (a.x == b.x) && (a.y == b.y); }
 inline bool operator!=(Vec2 a, Vec2 b) { return !operator==(a, b); }

@@ -16,7 +16,6 @@ int main() {
   v *= 3;
 
   std::cout << v.x << " " << v.y << std::endl;
-  std::cout << v.e[0] << " " << v.e[1] << std::endl;
 
   std::cout << vec_dot(v1, v2) << std::endl;
 
@@ -29,7 +28,7 @@ int main() {
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(PINK);
-    DrawRectangleV(p.rl, size.rl, GREEN);
+    DrawRectangleV(p, size, GREEN);
     EndDrawing();
   }
 
