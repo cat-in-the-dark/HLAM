@@ -8,12 +8,21 @@
 #define HLAM_COLLISIONS2D_IMPLEMENTATION
 #include "collisions2D.h"
 
+#define HLAM_VIEWPORT_IMPLEMENTATION
+#include "viewport.h"
+
 hlam::Rect r1{100, 20, 30, 30};
 hlam::Rect r2{120, 40, 30, 30};
 hlam::Vec2 line[2]{{150, 50}, {200, 100}};
 hlam::Vec2 line2[2]{{150, 100}, {200, 180}};
 hlam::Circle circle{{100, 100}, 30};
 hlam::Triangle2 triangle{{130, 150}, {100, 150}, {110, 180}};
+
+#define WORLD_WIDTH 400
+#define WORLD_HEIGHT 240
+
+static RenderTexture2D canvas;
+static hlam::Viewport viewport = {WORLD_WIDTH, WORLD_HEIGHT, Vector2{0, 0}};
 
 void CollisionDemo() {
   hlam::Vec2 ds{};
@@ -78,21 +87,30 @@ int main() {
   std::cout << vec_dot(v1, v2) << std::endl;
 
   InitWindow(400, 240, "Example");
+  canvas = LoadRenderTexture(viewport.canvas_width, viewport.canvas_height);
+  SetTextureFilter(canvas.texture, TEXTURE_FILTER_POINT);
 
   hlam::Vec2 p{20, 10};
   hlam::Vec2 size{40, 60};
 
   SetTargetFPS(60);
   while (!WindowShouldClose()) {
-    BeginDrawing();
+    viewport.update();
+    BeginTextureMode(canvas);
     ClearBackground(PINK);
     DrawRectangleV(p, size, GREEN);
-
     CollisionDemo();
+    EndTextureMode();
 
+    // actual render in screen
+    BeginDrawing();
+    ClearBackground(BLACK);
+    viewport.draw(canvas.texture);
+    DrawFPS(5, 5);
     EndDrawing();
   }
 
+  UnloadRenderTexture(canvas);
   CloseWindow();
   return 0;
 }
