@@ -1,6 +1,8 @@
 #ifndef HLAM_MATH_H
 #define HLAM_MATH_H
 
+#include <cmath>
+
 namespace hlam {
 
 #ifndef RAYLIB_H
@@ -102,8 +104,8 @@ inline Vec3 vec_cross(const Vec3 &v0, const Vec3 &v1) {
   };
 }
 
-inline float vec_length(const Vec2 &v) { return sqrtf(v.x * v.x + v.y * v.y); }
-inline float vec_length(const Vec3 &v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
+inline float vec_length(const Vec2 &v) { return std::sqrt(v.x * v.x + v.y * v.y); }
+inline float vec_length(const Vec3 &v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
 
 inline Vec2 vec_norm(const Vec2 &v) {
   Vec2 result{};
