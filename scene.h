@@ -88,7 +88,7 @@ class TextureScene : public Scene {
  public:
   TextureScene(Texture2D tex, int width, int height);
   void Activate();
-  void Update();
+  void Update(float dt);
   void Draw();
   void Exit();
 };
