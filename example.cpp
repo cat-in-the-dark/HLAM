@@ -3,7 +3,7 @@
 #include "raylib.h"
 
 #define HLAM_MATH_IMPLEMENTATION
-#include "math.h"
+#include "hlam_math.h"
 
 #define HLAM_COLLISIONS2D_IMPLEMENTATION
 #include "collisions2D.h"

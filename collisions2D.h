@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "math.h"
+#include "hlam_math.h"
 
 namespace hlam {
 
