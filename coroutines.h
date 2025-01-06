@@ -1,19 +1,24 @@
 #ifndef HLAM_COROUTINES_H
 #define HLAM_COROUTINES_H
 
+#include <algorithm>
+
 namespace hlam {
 // Timer checks whether time is passed or not.
 class Timer {
-  const float time;
-  float elapsed;
-
  public:
-  Timer(float time);
+  float time;
+  Timer(float time, float elapsed = 0);
 
   bool IsPassed() const;
   void Update(float dt);
   void Reset();
   float Elapsed() const;
+  void Finish();
+  float Percentage() const;
+
+ private:
+  float elapsed;
 };
 
 // OneShot checks whether time is passed or not and returns true only once
@@ -25,7 +30,7 @@ class OneShot {
  public:
   OneShot(float time);
 
-  bool IsPassed() const;
+  bool IsPassed();
   void Update(float dt);
   void Reset();
 };
@@ -50,14 +55,16 @@ class Cooldown {
 #ifdef HLAM_COROUTINES_IMPLEMENTATION
 
 namespace hlam {
-Timer::Timer(float time) : time(time), elapsed(0) {}
+Timer::Timer(float time, float elapsed) : time(time), elapsed(elapsed) {}
 bool Timer::IsPassed() const { return elapsed >= time; }
 void Timer::Update(float dt) { elapsed += dt; }
 void Timer::Reset() { elapsed = 0; }
 float Timer::Elapsed() const { return elapsed; }
+void Timer::Finish() { elapsed = time; }
+float Timer::Percentage() const { return std::clamp(elapsed / time, 0.0f, 1.0f); }
 
 OneShot::OneShot(float time) : time(time), elapsed(0.0f) {}
-bool OneShot::IsPassed() const {
+bool OneShot::IsPassed() {
   if (passed) {
     return false;
   }

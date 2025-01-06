@@ -1,29 +1,11 @@
 #ifndef HLAM_MATH_H
 #define HLAM_MATH_H
 
+#include <raylib.h>
+
 #include <cmath>
 
 namespace hlam {
-
-#ifndef RAYLIB_H
-struct Vec2 {
-  float x;
-  float y;
-};
-
-struct Vec3 {
-  float x;
-  float y;
-  float z;
-};
-
-struct Rect {
-  float x;
-  float y;
-  float width;
-  float height;
-};
-#else
 
 // Don't add anything, just define those here so everything (incl. operators)
 // is contained in our namespace
@@ -32,8 +14,6 @@ struct Vec2 : public ::Vector2 {};
 struct Vec3 : public ::Vector3 {};
 
 struct Rect : public ::Rectangle {};
-
-#endif
 
 struct Triangle2 {
   Vec2 p1;
@@ -52,13 +32,13 @@ inline bool operator!=(Vec2 a, Vec2 b) { return !operator==(a, b); }
 inline Vec2 operator+(Vec2 a) { return a; }
 inline Vec2 operator-(Vec2 a) { return {-a.x, -a.y}; }
 
-inline Vec2 operator+(Vec2 a, Vec2 b) { return {a.x + b.x, a.y + b.y}; }
+inline constexpr Vec2 operator+(Vec2 a, Vec2 b) { return {a.x + b.x, a.y + b.y}; }
 inline Vec2 operator-(Vec2 a, Vec2 b) { return {a.x - b.x, a.y - b.y}; }
 
-inline Vec2 operator*(Vec2 a, float scalar) { return {a.x * scalar, a.y * scalar}; }
+inline constexpr Vec2 operator*(Vec2 a, float scalar) { return {a.x * scalar, a.y * scalar}; }
 inline Vec2 operator*(float scalar, Vec2 a) { return operator*(a, scalar); }
 
-inline Vec2 operator/(Vec2 a, float scalar) { return operator*(a, 1.0f / scalar); }
+inline constexpr Vec2 operator/(Vec2 a, float scalar) { return operator*(a, 1.0f / scalar); }
 
 /* Hadamard Product */
 inline Vec2 operator*(Vec2 a, Vec2 b) { return {a.x * b.x, a.y * b.y}; }
@@ -107,6 +87,9 @@ inline Vec3 vec_cross(const Vec3 &v0, const Vec3 &v1) {
 inline float vec_length(const Vec2 &v) { return std::sqrt(v.x * v.x + v.y * v.y); }
 inline float vec_length(const Vec3 &v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
 
+inline float vec_length_sqr(const Vec2 &v) { return v.x * v.x + v.y * v.y; }
+inline float vec_length_sqr(const Vec3 &v) { return v.x * v.x + v.y * v.y + v.z * v.z; }
+
 inline Vec2 vec_norm(const Vec2 &v) {
   Vec2 result{};
   auto length = vec_length(v);
@@ -118,6 +101,10 @@ inline Vec2 vec_norm(const Vec2 &v) {
   }
 
   return result;
+}
+
+inline float vec_dist(const Vec2 &v1, const Vec2 &v2) {
+  return sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y));
 }
 
 inline float vec_dist_sqr(const Vec2 &v1, const Vec2 &v2) {

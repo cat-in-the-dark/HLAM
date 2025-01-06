@@ -56,8 +56,8 @@ class ComboScene : public Scene {
 
 class TimerScene : public Scene {
   SceneManager* sm;
-  std::string next;
   const float time;
+  std::string next;
   float elapsed;
 
  public:
@@ -92,7 +92,7 @@ class TextureScene : public Scene {
   void Draw();
   void Exit();
 };
-#endif // RAYLIB_H
+#endif  // RAYLIB_H
 
 class KeyAwaitScene : public Scene {
   SceneManager* sm;
@@ -101,6 +101,21 @@ class KeyAwaitScene : public Scene {
 
  public:
   KeyAwaitScene(SceneManager* sm, int key, std::string next);
+  void Activate();
+  void Update(float dt);
+  void Draw();
+  void Exit();
+};
+
+class DelayedKeyAwaitScene : public Scene {
+  SceneManager* sm;
+  int key;
+  float delay;
+  std::string next;
+  float time;
+
+ public:
+  DelayedKeyAwaitScene(SceneManager* sm, float delay, int key, std::string next);
   void Activate();
   void Update(float dt);
   void Draw();
@@ -121,9 +136,7 @@ Scene::~Scene() = default;
 
 SceneManager::SceneManager() {}
 
-void SceneManager::Change(const std::string& name) {
-  next = name;
-}
+void SceneManager::Change(const std::string& name) { next = name; }
 
 bool SceneManager::Update(float dt) {
   if (current != next) {
@@ -155,9 +168,7 @@ bool SceneManager::Draw() {
   return false;
 }
 
-std::string SceneManager::Current() const {
-  return current;
-}
+std::string SceneManager::Current() const { return current; }
 
 ComboScene::ComboScene() {}
 void ComboScene::Activate() {
@@ -192,6 +203,21 @@ void KeyAwaitScene::Update(float dt) {
 void KeyAwaitScene::Draw() {}
 void KeyAwaitScene::Exit() {}
 
+DelayedKeyAwaitScene::DelayedKeyAwaitScene(SceneManager* sm, float delay, int key, std::string next)
+    : sm(sm), key(key), delay(delay), next(next), time(0) {}
+
+inline void DelayedKeyAwaitScene::Activate() { time = 0; }
+inline void DelayedKeyAwaitScene::Update(float dt) {
+  time += dt;
+  if (time > delay) {
+    if (GetKeyPressed() == key) {
+      sm->Change(next);
+    }
+  }
+}
+void DelayedKeyAwaitScene::Draw() {}
+void DelayedKeyAwaitScene::Exit() {}
+
 TextureScene::TextureScene(Texture2D tex, int width, int height) : tex(tex), width(width), height(height) {}
 void TextureScene::Activate() {}
 void TextureScene::Update(float dt) {}
@@ -201,12 +227,10 @@ void TextureScene::Draw() {
   DrawTexturePro(tex, src, dst, {0, 0}, 0.0f, WHITE);
 }
 void TextureScene::Exit() {}
-#endif // RAYLIB_H
+#endif  // RAYLIB_H
 
 TimerScene::TimerScene(SceneManager* sm, float time, std::string next) : sm{sm}, time{time}, next{next} {}
-void TimerScene::Activate() {
-  elapsed = 0;
-}
+void TimerScene::Activate() { elapsed = 0; }
 void TimerScene::Update(float dt) {
   elapsed += dt;
   if (elapsed > time) {
@@ -222,9 +246,7 @@ LambdaScene::LambdaScene(std::function<void()> callback) : callback(callback) {}
 
 void LambdaScene::Activate() {}
 
-void LambdaScene::Update(float dt) {
-  callback();
-}
+void LambdaScene::Update(float dt) { callback(); }
 
 void LambdaScene::Draw() {}
 
